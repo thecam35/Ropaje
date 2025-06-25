@@ -2290,7 +2290,7 @@
                 } else {
                     actionButtons = `
                         <div class="product-actions">
-                            <button class="btn" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}')">Añadir al Carrito</button>
+                            <button class="btn" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}', '${product.userId}')">Añadir al Carrito</button>
                             <button class="btn btn-secondary">Comprar Ahora</button>
                         </div>
                     `;
@@ -2750,7 +2750,7 @@
                     ${priceHTML}
                     <div class="product-actions">
                         <button class="btn" onclick="showProductDetails('${product.id}')">Ver Detalles</button>
-                        <button class="btn btn-secondary" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}')">Añadir al Carrito</button>
+                        <button class="btn btn-secondary" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}', '${product.userId}')">Añadir al Carrito</button>
                     </div>
                 </div>
             `;
@@ -2777,7 +2777,7 @@
                     </div>
                     <div class="product-actions">
                         <button class="btn" onclick="showProductDetails('${product.id}')">Ver Detalles</button>
-                        <button class="btn btn-secondary" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}')">Añadir al Carrito</button>
+                        <button class="btn btn-secondary" onclick="addToCart('${product.id}', '${product.name}', ${product.price}, '${product.images[0]}', '${product.company}', '${product.userId}')">Añadir al Carrito</button>
                     </div>
                 </div>
             `;
@@ -2845,7 +2845,7 @@
         }
 
         // Funciones de carrito
-        function addToCart(productId, productName, price, image, company) {
+        function addToCart(productId, productName, price, image, company, userId) {
             if (!currentUser) {
                 alert('Debes iniciar sesión para agregar productos al carrito');
                 showLoginPage();
@@ -2863,6 +2863,7 @@
                     price: price,
                     image: image,
                     company: company,
+                    userId: userId,
                     quantity: 1
                 });
             }
@@ -3244,52 +3245,79 @@
                 return;
             }
             
-            // Obtener información del vendedor (asumimos que todos los productos son del mismo vendedor)
-            const sellerId = cart[0].userId; // Necesitarías agregar userId a los items del carrito
-            const sellerPhone = ''; // Necesitarías obtener el teléfono del vendedor
+            // Verificar si todos los productos son del mismo vendedor
+            const sellerIds = [...new Set(cart.map(item => item.userId))];
             
-            // Crear mensaje para WhatsApp
-            let message = `¡Hola! Quiero hacer un pedido:\n\n`;
-            
-            cart.forEach(item => {
-                message += `- ${item.name} (${item.quantity} x $${item.price.toFixed(2)}) - $${(item.quantity * item.price).toFixed(2)}\n`;
-            });
-            
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal > 50 ? 0 : 5.99;
-            const total = subtotal + shipping;
-            
-            message += `\nSubtotal: $${subtotal.toFixed(2)}\n`;
-            message += `Envío: $${shipping.toFixed(2)}\n`;
-            message += `Total: $${total.toFixed(2)}\n\n`;
-            message += `Mis datos de envío:\n`;
-            message += `Nombre: ${name}\n`;
-            message += `Dirección: ${address}\n`;
-            message += `Ciudad: ${city}\n`;
-            message += `Código Postal: ${zip}\n`;
-            message += `Teléfono: ${phone}\n`;
-            if (notes) {
-                message += `Notas: ${notes}\n`;
+            if (sellerIds.length > 1) {
+                alert('Actualmente solo puedes comprar productos de un mismo vendedor en cada pedido.');
+                return;
             }
             
-            // Codificar el mensaje para URL
-            const encodedMessage = encodeURIComponent(message);
+            const sellerId = sellerIds[0];
             
-            // Abrir WhatsApp con el mensaje (asumiendo que el vendedor tiene un número en su perfil)
-            if (sellerPhone) {
+            // Obtener información del vendedor
+            db.collection('users').doc(sellerId).get().then(sellerDoc => {
+                if (!sellerDoc.exists) {
+                    alert('No se pudo obtener la información del vendedor');
+                    return;
+                }
+                
+                const seller = sellerDoc.data();
+                const sellerPhone = seller.phone;
+                
+                if (!sellerPhone) {
+                    alert('El vendedor no tiene un número de WhatsApp registrado. No podemos procesar tu pedido.');
+                    return;
+                }
+                
+                // Crear mensaje para WhatsApp
+                let message = `¡Hola ${seller.name}! Quiero hacer un pedido en Moda Elegante:\n\n`;
+                message += `*Detalles del pedido:*\n\n`;
+                
+                cart.forEach(item => {
+                    message += `- ${item.name} (${item.quantity} x $${item.price.toFixed(2)}) - $${(item.quantity * item.price).toFixed(2)}\n`;
+                });
+                
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const shipping = subtotal > 50 ? 0 : 5.99;
+                const total = subtotal + shipping;
+                
+                message += `\n*Resumen del pedido:*\n`;
+                message += `Subtotal: $${subtotal.toFixed(2)}\n`;
+                message += `Envío: $${shipping.toFixed(2)}\n`;
+                message += `Total: $${total.toFixed(2)}\n\n`;
+                
+                message += `*Mis datos de envío:*\n`;
+                message += `Nombre: ${name}\n`;
+                message += `Dirección: ${address}\n`;
+                message += `Ciudad: ${city}\n`;
+                message += `Código Postal: ${zip}\n`;
+                message += `Teléfono/WhatsApp: ${phone}\n`;
+                if (notes) {
+                    message += `Notas: ${notes}\n`;
+                }
+                
+                message += `\n*Método de pago:*\n`;
+                message += `Por seguridad de ambas partes, sugiero realizar el pago contraentrega al momento de recibir el producto. ¿Estás de acuerdo con este método o prefieres otra forma de pago?\n\n`;
+                message += `Por favor confírmame la disponibilidad de los productos y coordinar los detalles del envío. ¡Gracias!`;
+                
+                // Codificar el mensaje para URL
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Abrir WhatsApp con el mensaje
                 window.open(`https://wa.me/${sellerPhone}?text=${encodedMessage}`, '_blank');
-            } else {
-                // Si no hay número, mostrar el mensaje para que el usuario lo copie
-                alert('Por favor envía este mensaje al vendedor:\n\n' + message);
-            }
-            
-            // Limpiar el carrito
-            cart = [];
-            saveCart();
-            renderCart();
-            hideCheckoutForm();
-            
-            alert('¡Pedido completado! Por favor contacta al vendedor para finalizar la compra.');
+                
+                // Limpiar el carrito
+                cart = [];
+                saveCart();
+                renderCart();
+                hideCheckoutForm();
+                
+                alert('¡Pedido completado! Por favor contacta al vendedor para finalizar la compra.');
+            }).catch(error => {
+                console.error('Error al obtener información del vendedor:', error);
+                alert('Error al procesar el pedido. Por favor intenta nuevamente.');
+            });
         }
 
         function toggleSpecialOfferFields() {
