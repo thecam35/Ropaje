@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moda Elegante - Tienda de Ropa</title>
+    <title>Moda Futura - Tienda de Ropa Elegante</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #e74c3c;
-            --light-accent: #3498db;
-            --success-color: #2ecc71;
-            --text-color: #333;
-            --light-text: #7f8c8d;
-            --bg-color: #f5f5f5;
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f4c75;
+            --light-accent: #00b7c2;
+            --success-color: #4ecca3;
+            --danger-color: #f05454;
+            --text-color: #eeeeee;
+            --light-text: #b8b8b8;
+            --bg-color: #0f0f1a;
+            --card-bg: #1e1e2e;
             --white: #ffffff;
-            --shadow: 0 5px 15px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient: linear-gradient(135deg, #0f4c75 0%, #00b7c2 100%);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         
         body {
@@ -35,14 +39,20 @@
             line-height: 1.6;
         }
         
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+        
         header {
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             color: var(--white);
             padding: 1rem 0;
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .header-container {
@@ -58,10 +68,10 @@
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: 1px;
-        }
-        
-        .logo span {
-            color: var(--accent-color);
+            font-family: 'Playfair Display', serif;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .auth-buttons a, 
@@ -69,33 +79,35 @@
             color: var(--white);
             text-decoration: none;
             margin-left: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
             font-size: 0.9rem;
             transition: var(--transition);
+            font-weight: 500;
         }
         
         .auth-buttons a.login {
-            background-color: var(--light-accent);
+            background-color: transparent;
+            border: 2px solid var(--light-accent);
         }
         
         .auth-buttons a.register {
-            background-color: var(--success-color);
+            background: var(--gradient);
         }
         
         .auth-buttons a.logout {
-            background-color: var(--accent-color);
+            background-color: var(--danger-color);
         }
         
         .auth-buttons a:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 183, 194, 0.4);
         }
         
         .user-info {
             display: inline-block;
             margin-right: 1rem;
-            color: var(--white);
+            color: var(--light-accent);
             font-size: 0.9rem;
         }
         
@@ -103,6 +115,7 @@
             background-color: var(--secondary-color);
             padding: 1rem 0;
             box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
         }
         
         .nav-container {
@@ -119,66 +132,59 @@
         }
         
         nav ul li {
-            margin: 0 1rem;
+            margin: 0 0.5rem;
         }
         
         nav ul li a {
             color: var(--white);
             text-decoration: none;
             font-weight: 500;
-            padding: 0.5rem 0;
+            padding: 0.5rem 1rem;
             position: relative;
             transition: var(--transition);
+            border-radius: 4px;
         }
         
-        nav ul li a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--accent-color);
-            bottom: 0;
-            left: 0;
-            transition: var(--transition);
-        }
-        
-        nav ul li a:hover:after {
-            width: 100%;
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .add-product-nav {
             background-color: var(--success-color);
             color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
             margin-left: 1rem;
             transition: var(--transition);
+            font-weight: 500;
         }
         
         .profile-nav {
             background-color: var(--light-accent);
             color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
             margin-left: 1rem;
             transition: var(--transition);
+            font-weight: 500;
         }
         
         .cart-nav {
             background-color: #f39c12;
             color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
             margin-left: 1rem;
             transition: var(--transition);
             position: relative;
+            font-weight: 500;
         }
         
         .cart-count {
             position: absolute;
             top: -8px;
             right: -8px;
-            background-color: var(--accent-color);
+            background-color: var(--danger-color);
             color: white;
             border-radius: 50%;
             width: 20px;
@@ -192,70 +198,96 @@
         .add-product-nav:hover,
         .profile-nav:hover,
         .cart-nav:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .hero {
-            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            height: 60vh;
+            height: 70vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: var(--white);
             margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 76, 117, 0.6) 0%, rgba(0, 183, 194, 0.6) 100%);
+            z-index: 1;
         }
         
         .hero-content {
             max-width: 800px;
             padding: 0 2rem;
+            position: relative;
+            z-index: 2;
         }
         
         .hero-content h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .hero-content p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
+            opacity: 0.9;
         }
         
         .btn {
             display: inline-block;
-            background-color: var(--accent-color);
+            background: var(--gradient);
             color: var(--white);
-            padding: 0.8rem 1.8rem;
-            border-radius: 4px;
+            padding: 1rem 2.2rem;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: 600;
             border: none;
             cursor: pointer;
             transition: var(--transition);
             font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(15, 76, 117, 0.4);
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 8px 25px rgba(15, 76, 117, 0.6);
         }
         
         .btn-secondary {
             background-color: var(--light-accent);
+            box-shadow: 0 4px 15px rgba(0, 183, 194, 0.4);
         }
         
         .btn-secondary:hover {
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 183, 194, 0.6);
         }
         
         .btn-outline {
             background-color: transparent;
             border: 2px solid var(--white);
             margin-left: 1rem;
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
         }
         
         .container {
@@ -268,6 +300,7 @@
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
+            font-size: 2.2rem;
         }
         
         .section-title:after {
@@ -275,8 +308,9 @@
             display: block;
             width: 80px;
             height: 4px;
-            background: var(--accent-color);
+            background: var(--gradient);
             margin: 1rem auto;
+            border-radius: 2px;
         }
         
         .products {
@@ -287,29 +321,31 @@
         }
         
         .product-card {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
         
         .product-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background-color: var(--accent-color);
+            background: var(--gradient);
             color: var(--white);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            z-index: 2;
         }
         
         .special-offer-badge {
@@ -322,13 +358,37 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            z-index: 2;
         }
         
         .product-img {
             height: 300px;
             background-size: cover;
             background-position: center;
-            background-color: #eee;
+            background-color: #1a1a2e;
+            transition: transform 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-img::after {
+            opacity: 1;
+        }
+        
+        .product-card:hover .product-img {
+            transform: scale(1.05);
         }
         
         .product-info {
@@ -338,11 +398,11 @@
         .product-info h3 {
             margin-bottom: 0.5rem;
             font-size: 1.2rem;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .company-name {
-            color: var(--light-text);
+            color: var(--light-accent);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
@@ -350,11 +410,11 @@
         .product-description {
             font-size: 0.95rem;
             margin-bottom: 1rem;
-            color: var(--text-color);
+            color: var(--light-text);
         }
         
         .price {
-            color: var(--accent-color);
+            color: var(--white);
             font-weight: 700;
             font-size: 1.3rem;
             margin: 1rem 0;
@@ -370,6 +430,7 @@
         .product-actions {
             display: flex;
             gap: 1rem;
+            margin-top: 1.5rem;
         }
         
         .product-details-page {
@@ -384,10 +445,13 @@
             text-decoration: none;
             font-weight: 600;
             transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
         }
         
         .back-button:hover {
-            color: var(--primary-color);
+            color: var(--white);
+            background-color: rgba(0, 183, 194, 0.1);
         }
         
         .back-button svg {
@@ -398,16 +462,17 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
-            background-color: var(--white);
+            background-color: var(--card-bg);
             padding: 2rem;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .product-gallery {
             display: grid;
             grid-template-columns: 100px 1fr;
-            gap: 1rem;
+            gap: 1.5rem;
         }
         
         .thumbnail-container {
@@ -421,14 +486,14 @@
             height: 80px;
             background-size: cover;
             background-position: center;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             border: 2px solid transparent;
             transition: var(--transition);
         }
         
         .thumbnail.active {
-            border-color: var(--accent-color);
+            border-color: var(--light-accent);
         }
         
         .main-image {
@@ -437,7 +502,8 @@
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 4px;
+            border-radius: 12px;
+            background-color: var(--primary-color);
         }
         
         .product-meta {
@@ -445,20 +511,20 @@
         }
         
         .product-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 0.5rem;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .product-price {
             font-size: 1.8rem;
-            color: var(--accent-color);
+            color: var(--white);
             font-weight: 700;
             margin: 1rem 0;
         }
         
         .product-vendor {
-            color: var(--light-text);
+            color: var(--light-accent);
             font-size: 0.95rem;
         }
         
@@ -475,7 +541,7 @@
         
         .size-option {
             padding: 0.6rem 1.2rem;
-            background-color: #f0f0f0;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             cursor: pointer;
             transition: var(--transition);
@@ -483,7 +549,7 @@
         }
         
         .size-option.selected {
-            background-color: var(--accent-color);
+            background: var(--gradient);
             color: var(--white);
         }
         
@@ -498,7 +564,7 @@
         
         .details-section h3 {
             margin-bottom: 1rem;
-            color: var(--primary-color);
+            color: var(--white);
             position: relative;
             padding-bottom: 0.5rem;
         }
@@ -510,23 +576,25 @@
             left: 0;
             width: 50px;
             height: 2px;
-            background-color: var(--accent-color);
+            background: var(--gradient);
         }
         
         .form-container {
             max-width: 800px;
             margin: 2rem auto;
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .form-title {
             text-align: center;
             margin-bottom: 2rem;
-            color: var(--primary-color);
+            color: var(--white);
             position: relative;
+            font-size: 1.8rem;
         }
         
         .form-title:after {
@@ -534,8 +602,9 @@
             display: block;
             width: 60px;
             height: 3px;
-            background: var(--accent-color);
+            background: var(--gradient);
             margin: 1rem auto;
+            border-radius: 2px;
         }
         
         .form-group {
@@ -546,22 +615,25 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .form-control {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             font-size: 1rem;
             transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--white);
         }
         
         .form-control:focus {
             border-color: var(--light-accent);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 183, 194, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         textarea.form-control {
@@ -570,7 +642,7 @@
         }
         
         .error-message {
-            color: var(--accent-color);
+            color: var(--danger-color);
             font-size: 0.85rem;
             margin-top: 0.3rem;
             display: block;
@@ -593,15 +665,15 @@
             display: inline-flex;
             align-items: center;
             padding: 0.5rem 1rem;
-            background-color: #f0f0f0;
-            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             font-size: 0.9rem;
         }
         
         .remove-size {
             margin-left: 0.5rem;
             cursor: pointer;
-            color: var(--accent-color);
+            color: var(--danger-color);
             font-weight: bold;
         }
         
@@ -613,27 +685,30 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .image-upload-box {
-            border: 2px dashed #ccc;
-            border-radius: 4px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.03);
         }
         
         .image-upload-box:hover {
             border-color: var(--light-accent);
+            background-color: rgba(0, 183, 194, 0.05);
         }
         
         .image-upload-box img {
             max-width: 100%;
             max-height: 200px;
             margin-bottom: 1rem;
+            border-radius: 4px;
         }
         
         .image-upload-box p {
@@ -656,8 +731,9 @@
             width: 100px;
             height: 100px;
             position: relative;
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .image-preview img {
@@ -670,7 +746,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            background-color: var(--accent-color);
+            background-color: var(--danger-color);
             color: white;
             width: 20px;
             height: 20px;
@@ -679,6 +755,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 0.8rem;
+            border-bottom-left-radius: 8px;
         }
         
         .special-offers-page {
@@ -692,6 +769,7 @@
             justify-content: center;
             background-color: var(--bg-color);
             padding: 2rem;
+            background-image: radial-gradient(circle at 10% 20%, rgba(15, 76, 117, 0.1) 0%, rgba(0, 183, 194, 0.1) 90%);
         }
         
         .auth-container {
@@ -704,6 +782,7 @@
             color: var(--white);
             padding: 3rem 0 1.5rem;
             margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .footer-container {
@@ -720,6 +799,7 @@
             margin-bottom: 1.5rem;
             position: relative;
             padding-bottom: 0.5rem;
+            color: var(--white);
         }
         
         .footer-column h3:after {
@@ -729,7 +809,7 @@
             left: 0;
             width: 40px;
             height: 2px;
-            background-color: var(--accent-color);
+            background: var(--gradient);
         }
         
         .footer-column ul {
@@ -741,13 +821,13 @@
         }
         
         .footer-column ul li a {
-            color: #ddd;
+            color: var(--light-text);
             text-decoration: none;
             transition: var(--transition);
         }
         
         .footer-column ul li a:hover {
-            color: var(--white);
+            color: var(--light-accent);
             padding-left: 5px;
         }
         
@@ -757,7 +837,7 @@
             padding-top: 1.5rem;
             border-top: 1px solid rgba(255,255,255,0.1);
             font-size: 0.9rem;
-            color: #ddd;
+            color: var(--light-text);
         }
         
         .hidden {
@@ -784,21 +864,23 @@
         }
         
         .profile-sidebar {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
             padding: 1.5rem;
             box-shadow: var(--shadow);
             height: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .profile-avatar {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            background-color: #eee;
+            background-color: var(--primary-color);
             margin: 0 auto 1rem;
             overflow: hidden;
             border: 3px solid var(--light-accent);
+            box-shadow: 0 5px 15px rgba(0, 183, 194, 0.3);
         }
         
         .profile-avatar img {
@@ -811,12 +893,12 @@
             text-align: center;
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .profile-company {
             text-align: center;
-            color: var(--light-text);
+            color: var(--light-accent);
             margin-bottom: 1.5rem;
         }
         
@@ -833,7 +915,7 @@
         .stat-value {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .stat-label {
@@ -851,24 +933,25 @@
         
         .profile-menu a {
             display: block;
-            padding: 0.5rem;
-            color: var(--text-color);
+            padding: 0.8rem;
+            color: var(--light-text);
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 8px;
             transition: var(--transition);
         }
         
         .profile-menu a:hover, 
         .profile-menu a.active {
-            background-color: var(--light-accent);
+            background: var(--gradient);
             color: var(--white);
         }
         
         .profile-content {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
             padding: 1.5rem;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .profile-section {
@@ -882,7 +965,7 @@
         .profile-section-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: var(--white);
             position: relative;
             padding-bottom: 0.5rem;
         }
@@ -894,7 +977,7 @@
             left: 0;
             width: 50px;
             height: 2px;
-            background-color: var(--accent-color);
+            background: var(--gradient);
         }
         
         /* Estilos para el carrito */
@@ -903,10 +986,11 @@
         }
         
         .cart-container {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
             padding: 2rem;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .cart-items {
@@ -918,7 +1002,7 @@
             grid-template-columns: 100px 1fr 150px 100px;
             gap: 1.5rem;
             padding: 1rem 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             align-items: center;
         }
         
@@ -927,53 +1011,57 @@
             height: 100px;
             background-size: cover;
             background-position: center;
-            border-radius: 4px;
+            border-radius: 8px;
         }
         
         .cart-item-info h4 {
             margin-bottom: 0.5rem;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .cart-item-info p {
-            color: var(--light-text);
+            color: var(--light-accent);
             font-size: 0.9rem;
         }
         
         .cart-item-price {
             font-weight: 700;
-            color: var(--accent-color);
+            color: var(--white);
         }
         
         .cart-item-remove {
-            color: var(--accent-color);
+            color: var(--danger-color);
             cursor: pointer;
             font-weight: 600;
+            font-size: 1.2rem;
         }
         
         .cart-summary {
-            background-color: #f9f9f9;
+            background-color: rgba(255, 255, 255, 0.05);
             padding: 1.5rem;
             border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .cart-summary h3 {
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: var(--white);
         }
         
         .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
+            color: var(--light-text);
         }
         
         .summary-total {
             font-weight: 700;
             font-size: 1.2rem;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             padding-top: 1rem;
             margin-top: 1rem;
+            color: var(--white);
         }
         
         /* Estilos para el formulario de checkout */
@@ -1023,6 +1111,29 @@
             font-weight: 600;
         }
         
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Efecto de vidrio */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Efecto de neón */
+        .neon-text {
+            text-shadow: 0 0 5px var(--light-accent), 0 0 10px var(--light-accent);
+        }
+        
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -1034,7 +1145,7 @@
             }
             
             .hero-content h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .product-details {
@@ -1108,11 +1219,14 @@
             .thumbnail-container {
                 flex-direction: row;
                 order: 2;
+                overflow-x: auto;
+                padding-bottom: 1rem;
             }
             
             .thumbnail {
                 height: 60px;
                 width: 60px;
+                flex-shrink: 0;
             }
             
             .size-form {
@@ -1126,7 +1240,7 @@
     <div class="main-page" id="main-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">ROPA<span>JE</span></div>
                 <div class="auth-buttons" id="auth-buttons">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1160,8 +1274,8 @@
         
         <section class="hero">
             <div class="hero-content">
-                <h1>Colección de Verano 2023</h1>
-                <p>Descubre las últimas tendencias en moda con nuestras exclusivas prendas</p>
+                <h1>Colección Exclusiva 2023</h1>
+                <p>Descubre las últimas tendencias en moda con diseños futuristas y elegantes</p>
                 <a href="#" class="btn">Ver Colección</a>
                 <a href="#" class="btn btn-outline" onclick="showSpecialOffersPage()">Ofertas Especiales</a>
             </div>
@@ -1178,8 +1292,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1202,14 +1316,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -1218,7 +1332,7 @@
     <div class="details-page hidden" id="details-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">Moda<span>Futura</span></div>
                 <div class="auth-buttons" id="auth-buttons-details">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1268,8 +1382,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1292,14 +1406,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -1308,7 +1422,7 @@
     <div class="details-page hidden" id="add-product-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">Moda<span>Futura</span></div>
                 <div class="auth-buttons" id="auth-buttons-add-product">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1370,8 +1484,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="product-price">Precio ($)</label>
-                        <input type="number" id="product-price" class="form-control" step="0.01" required>
+                        <label for="product-price">Precio ($COP)</label>
+                        <input type="number" id="product-price" class="form-control" step="1000" required>
                     </div>
                     <div class="form-group">
                         <label for="product-description">Descripción</label>
@@ -1380,11 +1494,11 @@
                     
                     <!-- Sección para subir imágenes -->
                     <div class="image-upload-container">
-                        <label class="image-upload-label">Imágenes del Producto (máx. 3)</label>
+                        <label class="image-upload-label">Imágenes del Producto (máx. 5)</label>
                         <div class="image-upload-box" onclick="document.getElementById('product-images').click()">
                             <img id="main-image-preview" src="" alt="Vista previa" style="display: none;">
                             <p>Haz clic para seleccionar imágenes</p>
-                            <p class="text-muted">Formatos aceptados: JPG, PNG (Máx. 500KB cada una)</p>
+                            <p class="text-muted">Formatos aceptados: JPG, PNG (Se reducirá el tamaño si es necesario)</p>
                             <input type="file" id="product-images" accept="image/*" multiple style="display: none;" onchange="handleImageUpload(event)">
                         </div>
                         <div class="image-preview-container" id="image-previews">
@@ -1421,8 +1535,8 @@
                         
                         <div id="special-offer-fields" class="hidden">
                             <div class="form-group mt-1">
-                                <label for="original-price">Precio Original ($)</label>
-                                <input type="number" id="original-price" class="form-control" step="0.01">
+                                <label for="original-price">Precio Original ($COP)</label>
+                                <input type="number" id="original-price" class="form-control" step="1000">
                             </div>
                             <div class="form-group">
                                 <label for="offer-description">Descripción de la Oferta</label>
@@ -1439,8 +1553,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1463,14 +1577,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -1479,7 +1593,7 @@
     <div class="details-page hidden" id="special-offers-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">Moda<span>Futura</span></div>
                 <div class="auth-buttons" id="auth-buttons-special-offers">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1530,8 +1644,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1554,14 +1668,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -1570,7 +1684,7 @@
     <div class="details-page hidden" id="profile-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">Moda<span>Futura</span></div>
                 <div class="auth-buttons" id="auth-buttons-profile">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1716,8 +1830,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1740,14 +1854,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -1756,7 +1870,7 @@
     <div class="details-page hidden" id="cart-page">
         <header>
             <div class="header-container">
-                <div class="logo">Moda<span>Elegante</span></div>
+                <div class="logo">ROPA<span>JE</span></div>
                 <div class="auth-buttons" id="auth-buttons-cart">
                     <!-- Dinámico según estado de autenticación -->
                 </div>
@@ -1808,15 +1922,15 @@
                         <h3>Resumen del Pedido</h3>
                         <div class="summary-row">
                             <span>Subtotal:</span>
-                            <span id="cart-subtotal">$0.00</span>
+                            <span id="cart-subtotal">$0</span>
                         </div>
                         <div class="summary-row">
                             <span>Envío:</span>
-                            <span id="cart-shipping">$0.00</span>
+                            <span id="cart-shipping">$0</span>
                         </div>
                         <div class="summary-row summary-total">
                             <span>Total:</span>
-                            <span id="cart-total">$0.00</span>
+                            <span id="cart-total">$0</span>
                         </div>
                         
                         <button class="btn mt-2" id="checkout-button" onclick="showCheckoutForm()">Finalizar Compra</button>
@@ -1862,8 +1976,8 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>Moda Elegante</h3>
-                    <p>Las mejores prendas al mejor precio. Calidad y estilo para toda la familia.</p>
+                    <h3>Moda Futura</h3>
+                    <p>Diseños elegantes para un estilo de vida moderno. Calidad y sofisticación en cada prenda.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Categorías</h3>
@@ -1886,14 +2000,14 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@modaelegante.com</li>
-                        <li>Teléfono: 555-123-4567</li>
-                        <li>Dirección: Calle Moda 123, Ciudad</li>
+                        <li>Email: info@modafutura.com</li>
+                        <li>Teléfono: +57 300 123 4567</li>
+                        <li>Dirección: Carrera 15 #88-64, Bogotá</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Moda Elegante. Todos los derechos reservados.</p>
+                <p>&copy; 2023 Moda Futura. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
@@ -2264,13 +2378,13 @@
                     }
                 });
                 
-                let priceHTML = `<div class="product-price">$${product.price.toFixed(2)}</div>`;
+                let priceHTML = `<div class="product-price">$${formatPrice(product.price)}</div>`;
                 
                 if (product.isSpecialOffer) {
                     priceHTML = `
                         <div class="product-price">
-                            <span class="old-price">$${product.originalPrice.toFixed(2)}</span>
-                            $${product.price.toFixed(2)}
+                            <span class="old-price">$${formatPrice(product.originalPrice)}</span>
+                            $${formatPrice(product.price)}
                         </div>
                         <div style="color: #f39c12; font-weight: bold; margin-bottom: 1rem;">
                             ${product.offerDescription}
@@ -2443,7 +2557,7 @@
                 category,
                 price,
                 description,
-                images: uploadedImages.slice(0, 3),
+                images: uploadedImages.slice(0, 5),
                 sizes: [...productSizes],
                 isSpecialOffer: isSpecialOffer,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2681,13 +2795,13 @@
                         const reviewElement = document.createElement('div');
                         reviewElement.className = 'review-item';
                         reviewElement.innerHTML = `
-                            <div style="border-bottom: 1px solid #eee; padding: 1rem 0; margin-bottom: 1rem;">
+                            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem 0; margin-bottom: 1rem;">
                                 <h4>${rating.productName}</h4>
                                 <div style="color: #f39c12; margin: 0.5rem 0;">
                                     ${renderStars(rating.rating)}
                                 </div>
                                 <p>${rating.comment || 'Sin comentarios'}</p>
-                                <p style="font-size: 0.8rem; color: #7f8c8d;">Por: ${rating.userName}</p>
+                                <p style="font-size: 0.8rem; color: var(--light-text);">Por: ${rating.userName}</p>
                             </div>
                         `;
                         reviewsContainer.appendChild(reviewElement);
@@ -2725,17 +2839,25 @@
             return stars;
         }
 
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-CO', { 
+                style: 'decimal', 
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0 
+            }).format(price);
+        }
+
         function renderProductCard(product, container) {
             const productCard = document.createElement('div');
-            productCard.className = 'product-card';
+            productCard.className = 'product-card fade-in';
             
-            let priceHTML = `<div class="price">$${product.price.toFixed(2)}</div>`;
+            let priceHTML = `<div class="price">$${formatPrice(product.price)}</div>`;
             
             if (product.isSpecialOffer) {
                 priceHTML = `
                     <div class="price">
-                        <span class="old-price">$${product.originalPrice.toFixed(2)}</span>
-                        $${product.price.toFixed(2)}
+                        <span class="old-price">$${formatPrice(product.originalPrice)}</span>
+                        $${formatPrice(product.price)}
                     </div>
                 `;
             }
@@ -2759,7 +2881,7 @@
 
         function renderSpecialOfferCard(product, container) {
             const productCard = document.createElement('div');
-            productCard.className = 'product-card';
+            productCard.className = 'product-card fade-in';
             
             productCard.innerHTML = `
                 <span class="special-offer-badge">Oferta Especial</span>
@@ -2769,8 +2891,8 @@
                     <div class="company-name">${product.company}</div>
                     <p class="product-description">${product.description.substring(0, 80)}${product.description.length > 80 ? '...' : ''}</p>
                     <div class="price">
-                        <span class="old-price">$${product.originalPrice.toFixed(2)}</span>
-                        $${product.price.toFixed(2)}
+                        <span class="old-price">$${formatPrice(product.originalPrice)}</span>
+                        $${formatPrice(product.price)}
                     </div>
                     <div style="color: #f39c12; font-weight: bold; margin: 0.5rem 0;">
                         ${product.offerDescription}
@@ -2786,15 +2908,15 @@
 
         function renderUserProductCard(product, container) {
             const productCard = document.createElement('div');
-            productCard.className = 'product-card';
+            productCard.className = 'product-card fade-in';
             
-            let priceHTML = `<div class="price">$${product.price.toFixed(2)}</div>`;
+            let priceHTML = `<div class="price">$${formatPrice(product.price)}</div>`;
             
             if (product.isSpecialOffer) {
                 priceHTML = `
                     <div class="price">
-                        <span class="old-price">$${product.originalPrice.toFixed(2)}</span>
-                        $${product.price.toFixed(2)}
+                        <span class="old-price">$${formatPrice(product.originalPrice)}</span>
+                        $${formatPrice(product.price)}
                     </div>
                 `;
             }
@@ -2812,7 +2934,7 @@
                     ratingHTML = `
                         <div style="margin-top: 0.5rem;">
                             <span style="color: #f39c12;">${renderStars(averageRating)}</span>
-                            <span style="font-size: 0.8rem; color: #7f8c8d;">(${querySnapshot.size} ${querySnapshot.size === 1 ? 'reseña' : 'reseñas'})</span>
+                            <span style="font-size: 0.8rem; color: var(--light-text);">(${querySnapshot.size} ${querySnapshot.size === 1 ? 'reseña' : 'reseñas'})</span>
                         </div>
                     `;
                     
@@ -2902,14 +3024,14 @@
             
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
+                cartItem.className = 'cart-item fade-in';
                 cartItem.innerHTML = `
                     <div class="cart-item-img" style="background-image: url('${item.image}')"></div>
                     <div class="cart-item-info">
                         <h4>${item.name}</h4>
                         <p>${item.company}</p>
                     </div>
-                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="cart-item-price">$${formatPrice(item.price * item.quantity)}</div>
                     <div class="cart-item-remove" onclick="removeFromCart('${item.id}')">×</div>
                     <div style="grid-column: 2; display: flex; align-items: center;">
                         <span style="margin-right: 0.5rem;">Cantidad:</span>
@@ -2927,12 +3049,12 @@
 
         function updateCartSummary() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal > 50 ? 0 : 5.99; // Envío gratis para compras mayores a $50
+            const shipping = subtotal > 50000 ? 0 : 10000; // Envío gratis para compras mayores a $50,000
             const total = subtotal + shipping;
             
-            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('cart-shipping').textContent = `$${shipping.toFixed(2)}`;
-            document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('cart-subtotal').textContent = `$${formatPrice(subtotal)}`;
+            document.getElementById('cart-shipping').textContent = `$${formatPrice(shipping)}`;
+            document.getElementById('cart-total').textContent = `$${formatPrice(total)}`;
         }
 
         function showCheckoutForm() {
@@ -3271,21 +3393,21 @@
                 }
                 
                 // Crear mensaje para WhatsApp
-                let message = `¡Hola ${seller.name}! Quiero hacer un pedido en Moda Elegante:\n\n`;
+                let message = `¡Hola ${seller.name}! Quiero hacer un pedido en Moda Futura:\n\n`;
                 message += `*Detalles del pedido:*\n\n`;
                 
                 cart.forEach(item => {
-                    message += `- ${item.name} (${item.quantity} x $${item.price.toFixed(2)}) - $${(item.quantity * item.price).toFixed(2)}\n`;
+                    message += `- ${item.name} (${item.quantity} x $${formatPrice(item.price)}) - $${formatPrice(item.quantity * item.price)}\n`;
                 });
                 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const shipping = subtotal > 50 ? 0 : 5.99;
+                const shipping = subtotal > 50000 ? 0 : 10000;
                 const total = subtotal + shipping;
                 
                 message += `\n*Resumen del pedido:*\n`;
-                message += `Subtotal: $${subtotal.toFixed(2)}\n`;
-                message += `Envío: $${shipping.toFixed(2)}\n`;
-                message += `Total: $${total.toFixed(2)}\n\n`;
+                message += `Subtotal: $${formatPrice(subtotal)}\n`;
+                message += `Envío: $${formatPrice(shipping)}\n`;
+                message += `Total: $${formatPrice(total)}\n\n`;
                 
                 message += `*Mis datos de envío:*\n`;
                 message += `Nombre: ${name}\n`;
@@ -3359,24 +3481,19 @@
             const files = event.target.files;
             const previewContainer = document.getElementById('image-previews');
             
-            if (files.length > 3) {
-                alert('Máximo 3 imágenes permitidas');
+            if (files.length > 5) {
+                alert('Máximo 5 imágenes permitidas');
                 return;
             }
 
             uploadedImages = [];
             previewContainer.innerHTML = '';
             
-            for (let i = 0; i < Math.min(files.length, 3); i++) {
+            for (let i = 0; i < Math.min(files.length, 5); i++) {
                 const file = files[i];
                 
                 if (!file.type.match('image.*')) {
                     alert('Solo se permiten archivos de imagen (JPG, PNG)');
-                    continue;
-                }
-                
-                if (file.size > 500 * 1024) {
-                    alert('La imagen ' + file.name + ' es demasiado grande (máximo 500KB)');
                     continue;
                 }
                 
@@ -3388,19 +3505,43 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
+                        // Reducir tamaño manteniendo relación de aspecto
                         const MAX_WIDTH = 800;
-                        const scale = MAX_WIDTH / img.width;
-                        canvas.width = MAX_WIDTH;
-                        canvas.height = img.height * scale;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
                         
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        
-                        const reducedQualityImage = canvas.toDataURL('image/jpeg', 0.7);
-                        
-                        if (reducedQualityImage.length > 300000) {
-                            alert('No se pudo comprimir suficiente la imagen ' + file.name);
-                            return;
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
                         }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Reducir calidad progresivamente hasta que sea menor a 500KB
+                        let quality = 0.9;
+                        let reducedQualityImage;
+                        
+                        do {
+                            reducedQualityImage = canvas.toDataURL('image/jpeg', quality);
+                            quality -= 0.1;
+                            
+                            if (quality < 0.1) {
+                                // Si no podemos reducir más, usamos la imagen más pequeña posible
+                                reducedQualityImage = canvas.toDataURL('image/jpeg', 0.1);
+                                break;
+                            }
+                        } while (reducedQualityImage.length > 500000 && quality > 0.1);
                         
                         uploadedImages.push(reducedQualityImage);
                         
@@ -3491,7 +3632,7 @@
                 category,
                 price,
                 description,
-                images: uploadedImages.slice(0, 3),
+                images: uploadedImages.slice(0, 5),
                 sizes: [...productSizes],
                 isSpecialOffer: isSpecialOffer,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
